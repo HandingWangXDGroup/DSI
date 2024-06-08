@@ -1,7 +1,10 @@
 function[A1, Half] = Generator_c2ode(A1,popsize,para_obj,para_con,wmax,bound)
 
 
-
+global VAR
+X=0;
+VAR0=max(A1.cV);
+cp=(-log(VAR0)-6)/log(1-0.5);
 
 
 w = 1;
@@ -11,7 +14,12 @@ minVar = bound(1,:);
 maxVar = bound(2,:);
 while w <= wmax
 
- 
+            if X < 0.5
+                VAR=VAR0*(1-X)^cp;
+            else
+                VAR=0;
+            end
+            X = X+1/wmax;
       
     if std(A1.cV) <1.e-8 && isempty(find(A1.cV==0,1))
         A1.D = repmat(minVar,popsize,1)+rand(popsize,D).*repmat((maxVar-minVar),popsize,1);
